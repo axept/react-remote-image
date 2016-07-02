@@ -2,6 +2,8 @@ react-remote-image
 ===
 Image component with declarative state control. Just like Relay.
 
+![react-remote-image-view](https://github.com/StartupMakers/react-remote-image/raw/master/example/demo.gif)
+
 ## Installation
 
 ```bash
