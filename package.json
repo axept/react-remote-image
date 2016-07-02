@@ -1,0 +1,44 @@
+{
+  "name": "react-remote-image",
+  "version": "0.1.0",
+  "description": "Image component with declarative state control. Just like Relay.",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "build:lib": "babel src --out-dir lib",
+    "build:umd": "cross-env NODE_ENV=development webpack src/index.js dist/remote-image.js",
+    "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js dist/remote-image.min.js",
+    "build": "npm run clean && npm run build:lib",
+    "prepublish": "npm run build",
+    "styleguide-server": "styleguidist server",
+    "styleguide-build": "styleguidist build"
+  },
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StartupMakers/react-remote-image.git"
+  },
+  "bugs": "https://github.com/StartupMakers/react-remote-image/issues",
+  "dependencies": {
+    "react": "^0.14.8"
+  },
+  "devDependencies": {
+    "babel-core": "^6.7.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-class-properties": "^6.10.2",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-react-hmre": "^1.1.1",
+    "cross-env": "^1.0.7",
+    "react-dom": "^0.14.8",
+    "react-styleguidist": "^2.3.1",
+    "rimraf": "^2.3.4",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "peerDependencies": {
+    "react": "^0.14.0 || ^15.0.0-0"
+  }
+}
