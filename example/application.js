@@ -10,8 +10,20 @@ const imageURLs = [
 ]
 const imageStyle = {
   display: 'inline-block',
+  position: 'relative',
   width: 300,
+  maxHeight: 250,
   padding: 15,
+}
+
+const labelStyle = {
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  padding: 10,
+  background: 'rgba(255,255,255,.5)',
+  fontWeight: 'bold',
 }
 
 export default class Application extends Component {
@@ -30,13 +42,20 @@ export default class Application extends Component {
             style={imageStyle}
             />
         ))}
-        <h2>Without cache</h2>
+        <h2>Advanced</h2>
         {imageURLs.map(URL => (
           <RemoteImage
-            forceFetch={true}
             renderLoading={() => (
               <div style={imageStyle}>
                 Loading...
+              </div>
+            )}
+            renderFetched={({ src, image }) => (
+              <div style={imageStyle}>
+                <img src={src} width="300" />
+                <span style={labelStyle}>
+                  {image.naturalWidth + 'x' + image.naturalHeight}
+                </span>
               </div>
             )}
             src={URL}
