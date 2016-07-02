@@ -16,17 +16,44 @@ const imageStyle = {
   padding: 15,
 }
 
+const loaderStyle = {
+  display: 'inline-block',
+  position: 'relative',
+  width: 300,
+  height: 220,
+  padding: 15,
+}
+
+const loaderSpinnerStyle = {
+  width: 148,
+  height: 148,
+  position: 'absolute',
+  left: '50%',
+  top: '50%',
+  marginTop: -74,
+  marginLeft: -74
+}
+
 const labelStyle = {
   position: 'absolute',
   left: 0,
   right: 0,
   top: 0,
   padding: 10,
-  background: 'rgba(255,255,255,.5)',
+  background: 'rgba(255,255,255,.7)',
   fontWeight: 'bold',
 }
 
 export default class Application extends Component {
+
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      isLoaded: {},
+      isVisible: {},
+    }
+  }
+
   render() {
     return (
       <div>
@@ -34,8 +61,11 @@ export default class Application extends Component {
         {imageURLs.map(URL => (
           <RemoteImage
             renderLoading={() => (
-              <div style={imageStyle}>
-                Loading...
+              <div style={loaderStyle}>
+                <img
+                  src={require('./loading-50.gif')}
+                  style={loaderSpinnerStyle}
+                  />
               </div>
             )}
             src={URL}
@@ -46,13 +76,16 @@ export default class Application extends Component {
         {imageURLs.map(URL => (
           <RemoteImage
             renderLoading={() => (
-              <div style={imageStyle}>
-                Loading...
+              <div style={loaderStyle}>
+                <img
+                  src={require('./loading-50.gif')}
+                  style={loaderSpinnerStyle}
+                  />
               </div>
             )}
             renderFetched={({ src, image }) => (
               <div style={imageStyle}>
-                <img src={src} width="300" />
+                <img src={src} style={{ ...imageStyle, padding: 0 }} />
                 <span style={labelStyle}>
                   {image.naturalWidth + 'x' + image.naturalHeight}
                 </span>

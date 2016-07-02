@@ -87,7 +87,10 @@ export default class RemoteImage extends Component {
 
   render() {
     const { isLoading, isFailed, srcSalt, src, image } = this.state
-    const { renderLoading, renderFetched, renderFailure } = this.props
+    const {
+      renderLoading, renderFetched, renderFailure,
+      forceFetch, onLoad, onError, ...otherProps
+    } = this.props
     if (isLoading) { 
       if (renderLoading) {
         return renderLoading({ src, image })
@@ -100,7 +103,7 @@ export default class RemoteImage extends Component {
       return renderFetched({ src, image })
     }
     return (
-      <img {...this.props} src={src} />
+      <img {...otherProps} src={src} />
     )
   }
 }
