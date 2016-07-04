@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib dist",
-    "build:lib": "babel src --out-dir lib",
+    "build:lib": "NODE_ENV=production babel src --out-dir lib",
     "build:umd": "cross-env NODE_ENV=development webpack src/index.js dist/remote-image.js",
     "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js dist/remote-image.min.js",
     "build": "npm run clean && npm run build:lib",
