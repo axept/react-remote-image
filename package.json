@@ -1,6 +1,6 @@
 {
   "name": "react-remote-image",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Image component with declarative state control. Just like Relay.",
   "main": "lib/index.js",
   "scripts": {
