@@ -5,7 +5,7 @@ function getURLWithSalt(URL) {
     const salt = Math.floor((Date.now() + Math.random()) * 100)
     if (URL.indexOf('?') >= 0) {
       return URL + '&_=' + salt
-    } 
+    }
     return URL + '?_=' + salt
   }
   return URL
@@ -28,11 +28,11 @@ export default class RemoteImage extends Component {
     this._handleRetry = this.fetchImage.bind(this)
     const src = props.forceFetch ? getURLWithSalt(props.src) : props.src
     this.state = {
-      ...props,
       src,
       isLoading: true,
       isFailed: false,
       image: null,
+      ...props,
     }
   }
 
@@ -47,7 +47,7 @@ export default class RemoteImage extends Component {
       (nextProps.src !== src) ?
         nextProps.src :
         src
-    const hasSalt = 
+    const hasSalt =
       (nextProps.forceFetch !== forceFetch) ?
         nextProps.forceFetch :
         forceFetch
@@ -91,7 +91,7 @@ export default class RemoteImage extends Component {
       renderLoading, renderFetched, renderFailure,
       forceFetch, onLoad, onError, ...otherProps
     } = this.props
-    if (isLoading) { 
+    if (isLoading) {
       if (renderLoading) {
         return renderLoading({ src, image })
       }
