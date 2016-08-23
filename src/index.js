@@ -34,6 +34,8 @@ export default class RemoteImage extends Component {
       image: null,
       ...props,
     }
+    this.onLoad = this.onLoad.bind(this)
+    this.onError = this.onError.bind(this)
   }
 
   componentDidMount() {
@@ -42,12 +44,6 @@ export default class RemoteImage extends Component {
 
   componentWillUnmount() {
     this.clearEvents()
-  }
-
-  clearEvents() {
-    const { image } = this.state
-    image.removeEventListener('load')
-    image.removeEventListener('error')
   }
 
   componentWillReceiveProps(nextProps) {
@@ -74,22 +70,32 @@ export default class RemoteImage extends Component {
     }
   }
 
+  onLoad() {
+    this.setState({
+      isLoading: false,
+      isFailed: false,
+    }, this.props.onLoad)
+  }
+
+  onError() {
+    this.clearEvents()
+    this.setState({
+      isLoading: false,
+      isFailed: true,
+    }, this.props.onError)
+  }
+
+  clearEvents() {
+    const { image } = this.state
+    image.removeEventListener('load', this.onLoad)
+    image.removeEventListener('error', this.onError)
+  }
+
   fetchImage() {
     const { src } = this.state
     const image = new Image()
-    image.addEventListener('load', () => {
-      this.setState({
-        isLoading: false,
-        isFailed: false,
-      }, this.props.onLoad)
-    })
-    image.addEventListener('error', () => {
-      this.clearEvents();
-      this.setState({
-        isLoading: false,
-        isFailed: true,
-      }, this.props.onError)
-    })
+    image.addEventListener('load', this.onLoad)
+    image.addEventListener('error', this.onError)
     image.src = src
     this.setState({
       image,
@@ -102,13 +108,13 @@ export default class RemoteImage extends Component {
       isFailed,
       src,
       image,
-    } = this.state
+      } = this.state
     const {
       renderLoading,
       renderFetched,
       renderFailure,
-       ...otherProps,
-    } = this.props
+      ...otherProps,
+      } = this.props
     if (isLoading) {
       if (renderLoading) {
         return renderLoading({ src, image })
