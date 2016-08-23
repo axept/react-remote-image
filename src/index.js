@@ -37,12 +37,21 @@ export default class RemoteImage extends Component {
   }
 
   componentDidMount() {
-    this.fetchImage()
+    this.fetchImage();
+  }
+
+  componentWillUnmount() {
+    this.clearEvents();
+  }
+
+  clearEvents() {
+    const { image } = this.state;
+    image.removeEventListener('load');
+    image.removeEventListener('error');
   }
 
   componentWillReceiveProps(nextProps) {
     const { src, forceFetch } = this.props
-    const nextState = {}
     const rawSrc  =
       (nextProps.src !== src) ?
         nextProps.src :
@@ -56,6 +65,7 @@ export default class RemoteImage extends Component {
         getURLWithSalt(rawSrc) :
         rawSrc
     if (finalSrc !== this.state.src) {
+      this.clearEvents();
       this.setState({
         src: finalSrc,
         isLoading: true,
@@ -65,32 +75,40 @@ export default class RemoteImage extends Component {
   }
 
   fetchImage() {
-    const { src } = this.state
-    const image = new Image()
-    image.onload = () => {
+    const { src } = this.state;
+    const image = new Image();
+    image.addEventListener('load', () => {
       this.setState({
         isLoading: false,
         isFailed: false,
       }, this.props.onLoad)
-    }
-    image.onerror = () => {
+    });
+    image.addEventListener('error', () => {
+      this.clearEvents();
       this.setState({
         isLoading: false,
         isFailed: true,
       }, this.props.onError)
-    }
-    image.src = src
+    });
+    image.src = src;
     this.setState({
       image,
-    })
+    });
   }
 
   render() {
-    const { isLoading, isFailed, srcSalt, src, image } = this.state
     const {
-      renderLoading, renderFetched, renderFailure,
-      forceFetch, onLoad, onError, ...otherProps
-    } = this.props
+      isLoading,
+      isFailed,
+      src,
+      image
+    } = this.state;
+    const {
+      renderLoading,
+      renderFetched,
+      renderFailure,
+       ...otherProps
+    } = this.props;
     if (isLoading) {
       if (renderLoading) {
         return renderLoading({ src, image })
