@@ -37,17 +37,17 @@ export default class RemoteImage extends Component {
   }
 
   componentDidMount() {
-    this.fetchImage();
+    this.fetchImage()
   }
 
   componentWillUnmount() {
-    this.clearEvents();
+    this.clearEvents()
   }
 
   clearEvents() {
-    const { image } = this.state;
-    image.removeEventListener('load');
-    image.removeEventListener('error');
+    const { image } = this.state
+    image.removeEventListener('load')
+    image.removeEventListener('error')
   }
 
   componentWillReceiveProps(nextProps) {
@@ -65,7 +65,7 @@ export default class RemoteImage extends Component {
         getURLWithSalt(rawSrc) :
         rawSrc
     if (finalSrc !== this.state.src) {
-      this.clearEvents();
+      this.clearEvents()
       this.setState({
         src: finalSrc,
         isLoading: true,
@@ -75,25 +75,25 @@ export default class RemoteImage extends Component {
   }
 
   fetchImage() {
-    const { src } = this.state;
-    const image = new Image();
+    const { src } = this.state
+    const image = new Image()
     image.addEventListener('load', () => {
       this.setState({
         isLoading: false,
         isFailed: false,
       }, this.props.onLoad)
-    });
+    })
     image.addEventListener('error', () => {
       this.clearEvents();
       this.setState({
         isLoading: false,
         isFailed: true,
       }, this.props.onError)
-    });
-    image.src = src;
+    })
+    image.src = src
     this.setState({
       image,
-    });
+    })
   }
 
   render() {
@@ -101,14 +101,14 @@ export default class RemoteImage extends Component {
       isLoading,
       isFailed,
       src,
-      image
-    } = this.state;
+      image,
+    } = this.state
     const {
       renderLoading,
       renderFetched,
       renderFailure,
-       ...otherProps
-    } = this.props;
+       ...otherProps,
+    } = this.props
     if (isLoading) {
       if (renderLoading) {
         return renderLoading({ src, image })
