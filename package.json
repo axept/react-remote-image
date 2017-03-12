@@ -13,13 +13,13 @@
     "styleguide-server": "styleguidist server",
     "styleguide-build": "styleguidist build"
   },
-  "author": "",
+  "author": "Axept <office@axept.co>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/StartupMakers/react-remote-image.git"
+    "url": "https://github.com/axept/react-remote-image.git"
   },
-  "bugs": "https://github.com/StartupMakers/react-remote-image/issues",
+  "bugs": "https://github.com/axept/react-remote-image/issues",
   "dependencies": {
     "react": "^0.14.8"
   },
