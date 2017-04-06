@@ -39,7 +39,12 @@ export default class RemoteImage extends Component {
   }
 
   componentDidMount() {
-    this.fetchImage()
+    const { src } = this.props
+    if (typeof src !== 'string') {
+      this.onError()
+    } else {
+      this.fetchImage()
+    }
   }
 
   componentWillUnmount() {
