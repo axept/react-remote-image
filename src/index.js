@@ -48,10 +48,7 @@ export default class RemoteImage extends Component {
   }
 
   componentWillUnmount() {
-    const { src } = this.props
-    if (typeof src === 'string') {
-      this.clearEvents()
-    }
+    this.clearEvents()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -95,8 +92,10 @@ export default class RemoteImage extends Component {
 
   clearEvents() {
     const { image } = this.state
-    image.removeEventListener('load', this.onLoad)
-    image.removeEventListener('error', this.onError)
+    if (image) {
+      image.removeEventListener('load', this.onLoad)
+      image.removeEventListener('error', this.onError)
+    }
   }
 
   fetchImage() {
