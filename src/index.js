@@ -14,7 +14,7 @@ function getURLWithSalt(URL) {
 export default class RemoteImage extends Component {
 
   static propTypes = {
-    src: PropTypes.string.isRequired,
+    src: PropTypes.string,
     forceFetch: PropTypes.bool,
     renderLoading: PropTypes.func.isRequired,
     renderFetched: PropTypes.func.isRequired,
@@ -27,10 +27,18 @@ export default class RemoteImage extends Component {
     super(props, context)
     this._handleRetry = this.fetchImage.bind(this)
     const src = props.forceFetch ? getURLWithSalt(props.src) : props.src
+    const isEmpty = typeof src !== 'string'
+    // Warning if source is empty, only for develop
+    if (process.env['NODE_ENV'] !== 'production') {
+      if (isEmpty) {
+        console.warn('Image src is not a string', src)
+      }
+    }
     this.state = {
       src,
       isLoading: true,
       isFailed: false,
+      isEmpty: typeof src !== 'string',
       image: null,
       ...props,
     }
@@ -39,12 +47,7 @@ export default class RemoteImage extends Component {
   }
 
   componentDidMount() {
-    const { src } = this.props
-    if (typeof src !== 'string') {
-      this.onError()
-    } else {
-      this.fetchImage()
-    }
+    this.fetchImage()
   }
 
   componentWillUnmount() {
@@ -71,6 +74,7 @@ export default class RemoteImage extends Component {
         src: finalSrc,
         isLoading: true,
         isFailed: false,
+        isEmpty: typeof src !== 'string',
       }, () => this.fetchImage())
     }
   }
@@ -99,20 +103,23 @@ export default class RemoteImage extends Component {
   }
 
   fetchImage() {
-    const { src } = this.state
-    const image = new Image()
-    image.addEventListener('load', this.onLoad)
-    image.addEventListener('error', this.onError)
-    image.src = src
-    this.setState({
-      image,
-    })
+    const { src, isEmpty } = this.state
+    if (!isEmpty) {
+      const image = new Image()
+      image.addEventListener('load', this.onLoad)
+      image.addEventListener('error', this.onError)
+      image.src = src
+      this.setState({
+        image,
+      })
+    }
   }
 
   render() {
     const {
       isLoading,
       isFailed,
+      isEmpty,
       src,
       image,
       } = this.state
@@ -122,11 +129,11 @@ export default class RemoteImage extends Component {
       renderFailure,
       ...otherProps,
       } = this.props
-    if (isLoading) {
+    if (isLoading && !isEmpty) {
       if (renderLoading) {
         return renderLoading({ src, image })
       }
-    } else if (isFailed) {
+    } else if (isFailed || isEmpty) {
       if (renderFailure) {
         return renderFailure('unable to load image', this._handleRetry)
       }
