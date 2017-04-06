@@ -14,11 +14,11 @@ function getURLWithSalt(URL) {
 export default class RemoteImage extends Component {
 
   static propTypes = {
-    src: PropTypes.string,
+    src: PropTypes.string.isRequired,
     forceFetch: PropTypes.bool,
-    renderLoading: PropTypes.func,
-    renderFetched: PropTypes.func,
-    renderFailure: PropTypes.func,
+    renderLoading: PropTypes.func.isRequired,
+    renderFetched: PropTypes.func.isRequired,
+    renderFailure: PropTypes.func.isRequired,
     onLoad: PropTypes.func,
     onError: PropTypes.func,
   }
@@ -48,7 +48,10 @@ export default class RemoteImage extends Component {
   }
 
   componentWillUnmount() {
-    this.clearEvents()
+    const { src } = this.props
+    if (typeof src === 'string') {
+      this.clearEvents()
+    }
   }
 
   componentWillReceiveProps(nextProps) {
