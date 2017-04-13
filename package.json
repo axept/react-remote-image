@@ -20,8 +20,9 @@
     "url": "https://github.com/axept/react-remote-image.git"
   },
   "bugs": "https://github.com/axept/react-remote-image/issues",
-  "dependencies": {
-    "react": "^0.14.8"
+
+  "peerDependencies": {
+    "react": "^15.4.2"
   },
   "devDependencies": {
     "babel-core": "^6.7.4",
@@ -38,8 +39,5 @@
     "rimraf": "^2.3.4",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1"
-  },
-  "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0-0"
   }
 }
