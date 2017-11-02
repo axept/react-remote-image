@@ -25,7 +25,6 @@ export default class RemoteImage extends Component {
 
   constructor(props, context) {
     super(props, context)
-    this._handleRetry = this.fetchImage.bind(this)
     const src = props.forceFetch ? getURLWithSalt(props.src) : props.src
     const isEmpty = typeof src !== 'string'
     // Warning if source is empty, only for develop
@@ -39,9 +38,9 @@ export default class RemoteImage extends Component {
       isLoading: true,
       isFailed: false,
       isEmpty: typeof src !== 'string',
-      image: null,
       ...props,
     }
+    this._handleRetry = this.fetchImage.bind(this)
     this.onLoad = this.onLoad.bind(this)
     this.onError = this.onError.bind(this)
   }
@@ -54,24 +53,12 @@ export default class RemoteImage extends Component {
     this.clearEvents()
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { src, forceFetch } = this.props
-    const rawSrc  =
-      (nextProps.src !== src) ?
-        nextProps.src :
-        src
-    const hasSalt =
-      (nextProps.forceFetch !== forceFetch) ?
-        nextProps.forceFetch :
-        forceFetch
-    const finalSrc =
-      hasSalt ?
-        getURLWithSalt(rawSrc) :
-        rawSrc
+  componentWillReceiveProps({ src, forceFetch }) {
+    const finalSrc = forceFetch ? getURLWithSalt(src) : src
     if (finalSrc !== this.state.src) {
       this.clearEvents()
       this.setState({
-        src: finalSrc,
+        src,
         isLoading: true,
         isFailed: false,
         isEmpty: typeof src !== 'string',
@@ -95,53 +82,50 @@ export default class RemoteImage extends Component {
   }
 
   clearEvents() {
-    const { image } = this.state
-    if (image) {
-      image.removeEventListener('load', this.onLoad)
-      image.removeEventListener('error', this.onError)
+    if (this.image) {
+      this.image.removeEventListener('load', this.onLoad)
+      this.image.removeEventListener('error', this.onError)
     }
   }
 
   fetchImage() {
     const { src, isEmpty } = this.state
     if (!isEmpty) {
-      const image = new Image()
-      image.addEventListener('load', this.onLoad)
-      image.addEventListener('error', this.onError)
-      image.src = src
-      this.setState({
-        image,
-      })
+      this.image = new Image()
+      this.image.addEventListener('load', this.onLoad)
+      this.image.addEventListener('error', this.onError)
+      this.image.src = src
     }
   }
 
   render() {
+    const { image, state, props } = this
     const {
       isLoading,
       isFailed,
       isEmpty,
       src,
-      image,
-      } = this.state
+      } = state
     const {
       renderLoading,
       renderFetched,
       renderFailure,
-      ...otherProps,
-      } = this.props
+      ...renderProps,
+      } = props
+    const error = new Error('Unable to load image')
     if (isLoading && !isEmpty) {
       if (renderLoading) {
         return renderLoading({ src, image })
       }
     } else if (isFailed || isEmpty) {
       if (renderFailure) {
-        return renderFailure('unable to load image', this._handleRetry)
+        return renderFailure(error, this._handleRetry)
       }
     } else if (renderFetched) {
       return renderFetched({ src, image })
     }
     return (
-      <img {...otherProps} src={src} />
+      <img {...renderProps} src={src} />
     )
   }
 }
