@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 function getURLWithSalt(URL) {
   if (typeof URL === 'string' && URL !=='' && URL.indexOf('data:') !== 0) {
@@ -114,13 +115,9 @@ export default class RemoteImage extends Component {
       } = props
     const error = new Error('Unable to load image')
     if (isLoading && !isEmpty) {
-      if (renderLoading) {
-        return renderLoading({ src, image })
-      }
+      return renderLoading({ src, image })
     } else if (isFailed || isEmpty) {
-      if (renderFailure) {
-        return renderFailure(error, this._handleRetry)
-      }
+      return renderFailure(error, this._handleRetry)
     } else if (renderFetched) {
       return renderFetched({ src, image })
     }
